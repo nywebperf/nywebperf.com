@@ -5,9 +5,8 @@
 <template>
     <section>
         <h1>URL Shortener</h1>
-        <p>
-            We will have a timer
-        </p>
+        <h2>Route path:</h2>
+        <p>{{ $route.path }}</p>
     </section>
 </template>
 
@@ -21,6 +20,18 @@ section {
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-size: 5rem;
+    font-size: 3rem;
+}
+
+section * {
+    margin: 0.3rem;
+}
+
+h2 {
+    font-size: 2rem;
+}
+
+p {
+    font-size: 1.5rem;
 }
 </style>
