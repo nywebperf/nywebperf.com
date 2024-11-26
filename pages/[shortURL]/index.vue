@@ -15,13 +15,28 @@ if (!targetRedirect) {
 const showRelease = targetRedirect.releaseDate;
 const timer = showRelease - dateTime;
 
+let remainingMs = Math.floor(showRelease - dateTime);
+
+const countdownDays = Math.floor(remainingMs / (1000 * 60 * 60 * 24));
+remainingMs = remainingMs % (1000 * 60 * 60 * 24);
+const countdownHours = Math.floor(remainingMs / (1000 * 60 * 60));
+remainingMs = remainingMs % (1000 * 60 * 60);
+const countdownMinutes = Math.floor(remainingMs / (1000 * 60));
+remainingMs = remainingMs % (1000 * 60);
+const countdownSeconds = Math.floor(remainingMs / 1000);
+
+const approxCountDownMonths = Math.ceil(countdownDays / 30);
+
 </script>
 
 <template>
     <main>
         <h1>Timer for {{ route.params.shortURL }}</h1>
         <p>{{ showRelease }}</p>
-        <p>{{ timer }}</p>
+        <p>Total remaining MS:{{ timer }}</p>
+        <p v-if="countdownDays < 30">{{ countdownDays }}:{{ countdownHours }}:{{ countdownMinutes }}:{{ countdownSeconds
+            }}</p>
+        <p v-else="countdownDays > 30">Approximately {{ approxCountDownMonths }} months left</p>
     </main>
 </template>
 
