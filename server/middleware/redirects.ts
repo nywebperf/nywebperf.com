@@ -1,24 +1,20 @@
-
-const redirects = [
-    {
-        destinationURL: 'https://alexchernyshev.com/',
-        shortURL: 'alex',
-        releaseDate: new Date('July 18, 2024 12:00:00')
-    },
-    {
-        destinationURL: 'https://www.sergeychernyshev.com/',
-        shortURL: 'sergey',
-        releaseDate: new Date('July 16, 2024 12:00:00')
-    },
-];
+import redirects from '../../redirectrules';
 
 export default defineEventHandler(async (event) => {
 
     const { path } = event;
+    const dateTime = new Date();
 
     for (const redirect of redirects) {
+
         if ("/" + redirect.shortURL === path) {
-            return sendRedirect(event, redirect.destinationURL, 307);
+
+            if (redirect.releaseDate && redirect.releaseDate.getTime() > dateTime.getTime()) {
+                return;
+            } else {
+                return sendRedirect(event, redirect.destinationURL, 307);
+            }
+
         }
     }
 
