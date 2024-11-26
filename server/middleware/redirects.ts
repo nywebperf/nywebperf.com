@@ -1,4 +1,4 @@
-import redirects from '../../redirectrules';
+import redirects from '@/redirectrules';
 
 export default defineEventHandler(async (event) => {
 

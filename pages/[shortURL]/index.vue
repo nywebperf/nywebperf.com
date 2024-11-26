@@ -1,5 +1,5 @@
 <script setup>
-import redirects from '../../redirectrules';
+import redirects from '@/redirectrules';
 
 const dateTime = new Date();
 const route = useRoute();
