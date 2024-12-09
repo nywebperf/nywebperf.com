@@ -16,6 +16,12 @@ export default defineEventHandler(async (event) => {
             }
 
         }
+        /*
+        else if (redirect.default){
+            return sendRedirect(event, redirect.default, 307);
+        }
+        
+        */
     }
 
 });

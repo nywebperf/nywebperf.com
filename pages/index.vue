@@ -1,5 +1,4 @@
 <script>
-// Timer logic will be here
 </script>
 
 <template>
