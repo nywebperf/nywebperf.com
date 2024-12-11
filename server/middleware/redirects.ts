@@ -4,6 +4,7 @@ export default defineEventHandler(async (event) => {
 
     const { path } = event;
     const dateTime = new Date();
+    const defaults = redirects.filter(rule => rule.default);
 
     for (const redirect of redirects) {
 
@@ -12,16 +13,16 @@ export default defineEventHandler(async (event) => {
             if (redirect.releaseDate && redirect.releaseDate.getTime() > dateTime.getTime()) {
                 return;
             } else {
-                return sendRedirect(event, redirect.destinationURL, 307);
+                return sendRedirect(event, redirect.destinationURL, 301);
             }
 
         }
-        /*
-        else if (redirect.default){
-            return sendRedirect(event, redirect.default, 307);
-        }
-        
-        */
     }
+
+    if (defaults.length === 0) {
+        return;
+    }
+
+    return sendRedirect(event, defaults[0].default, 302);
 
 });
