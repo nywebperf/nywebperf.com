@@ -17,15 +17,33 @@ const timer = showRelease - dateTime;
 
 let remainingMs = Math.floor(showRelease - dateTime);
 
-const countdownDays = Math.floor(remainingMs / (1000 * 60 * 60 * 24));
+//rewrote variables to be refs, so timerRecalc funtion can update them as it calculates
+const countdownDays = ref(Math.floor(remainingMs / (1000 * 60 * 60 * 24)));
 remainingMs = remainingMs % (1000 * 60 * 60 * 24);
-const countdownHours = Math.floor(remainingMs / (1000 * 60 * 60));
+const countdownHours = ref(Math.floor(remainingMs / (1000 * 60 * 60)));
 remainingMs = remainingMs % (1000 * 60 * 60);
-const countdownMinutes = Math.floor(remainingMs / (1000 * 60));
+const countdownMinutes = ref(Math.floor(remainingMs / (1000 * 60)));
 remainingMs = remainingMs % (1000 * 60);
-const countdownSeconds = Math.floor(remainingMs / 1000);
+const countdownSeconds = ref(Math.floor(remainingMs / 1000));
 
-const approxCountDownMonths = Math.ceil(countdownDays / 30);
+const approxCountDownMonths = ref(Math.ceil(countdownDays / 30));
+
+function timerRecalc() {
+
+    console.log('timer is recalculating')
+
+    countdownDays.value = Math.floor(remainingMs / (1000 * 60 * 60 * 24));
+    remainingMs = remainingMs % (1000 * 60 * 60 * 24);
+    countdownHours.value = Math.floor(remainingMs / (1000 * 60 * 60));
+    remainingMs = remainingMs % (1000 * 60 * 60);
+    countdownMinutes.value = Math.floor(remainingMs / (1000 * 60));
+    remainingMs = remainingMs % (1000 * 60);
+    countdownSeconds.value = Math.floor(remainingMs / 1000);
+
+    approxCountDownMonths.value = Math.ceil(countdownDays / 30); 
+}
+
+setInterval(timerRecalc(), 1000)
 
 </script>
 
