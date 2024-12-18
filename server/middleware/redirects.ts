@@ -4,7 +4,7 @@ export default defineEventHandler(async (event) => {
 
     const { path } = event;
     const dateTime = new Date();
-    const defaults = redirects.filter(rule => rule.default);
+    const unknowns = redirects.filter(rule => rule.unknownUrl);
 
     for (const redirect of redirects) {
 
@@ -19,10 +19,10 @@ export default defineEventHandler(async (event) => {
         }
     }
 
-    if (defaults.length === 0) {
+    if (unknowns.length === 0) {
         return;
     }
 
-    return sendRedirect(event, defaults[0].default, 302);
+    return sendRedirect(event, unknowns[0].unknownUrl, 302);
 
 });
