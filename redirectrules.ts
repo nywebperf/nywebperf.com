@@ -1,4 +1,6 @@
-const redirects = [
+import type { Rules } from "@/types/redirectrules";
+
+const redirects: Rules = [
     {
         unknownUrl: 'https://www.wikipedia.org/'
         // Add another "rule" that if a "default path" is included to redirect to specified
@@ -9,11 +11,11 @@ const redirects = [
         shortURL: 'alex',
         releaseDate: new Date('December 30, 2024 12:00:00')
     },
-    {
-        destinationURL: 'https://www.google.com/',
-        shortURL: '',
-        releaseDate: new Date('December 3, 2024 12:00:00')
-    },
+    // {
+    //     destinationURL: 'https://www.google.com/',
+    //     shortURL: '',
+    //     releaseDate: new Date('December 3, 2024 12:00:00')
+    // },
     {
         destinationURL: 'https://www.sergeychernyshev.com/',
         shortURL: 'sergey',
