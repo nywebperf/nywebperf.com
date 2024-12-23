@@ -1,7 +1,8 @@
-import type { UnknownUrlRule, ReleaseRedirectRule, PlainRedirectRule, Rules, Rule, } from '@/types/redirectrules';
 import redirects from '@/redirectrules';
 
 export default defineEventHandler(async (event) => {
+
+    appendResponseHeader(event, "Cache-Control", "no-store");
 
     const { path } = event;
 
@@ -20,7 +21,7 @@ export default defineEventHandler(async (event) => {
         }
     }
 
-    const unknowns: UnknownUrlRule[] = redirects.filter((rule: Rule): boolean => rule.hasOwnProperty('unknownUrl'));
+    const unknowns = redirects.filter(rule => rule.hasOwnProperty('unknownUrl'));
 
     if (unknowns.length === 0) {
         return;

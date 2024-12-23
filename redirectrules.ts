@@ -1,6 +1,4 @@
-import type { Rules } from "@/types/redirectrules";
-
-const redirects: Rules = [
+const redirects = [
     {
         unknownUrl: 'https://www.wikipedia.org/'
         // Add another "rule" that if a "default path" is included to redirect to specified
