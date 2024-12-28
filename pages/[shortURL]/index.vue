@@ -4,6 +4,7 @@ import { ref, onMounted } from 'vue';
 
 const route = useRoute();
 const targetRedirect = redirects.find((redirect) => redirect.shortURL === route.params.shortURL);
+let releaseButtonShow = false;
 
 if (!targetRedirect) {
     throw createError({
@@ -13,6 +14,8 @@ if (!targetRedirect) {
 }
 
 const showRelease = targetRedirect.releaseDate;
+// const showRelease = new Date(new Date().getTime() + 2000);
+
 const timer = ref('');
 
 //rewrote variables to be refs, so timerRecalc funtion can update them as it calculates
@@ -24,11 +27,9 @@ const approxCountDownMonths = ref(0);
 
 function timerRecalc() {
 
-    console.log('timer is recalculating');
-
     const dateTime = new Date();
-    timer.value = showRelease - dateTime;
-    let remainingMs = Math.floor(showRelease - dateTime);
+    timer.value = showRelease.getTime() - dateTime.getTime();
+    let remainingMs = Math.floor(timer.value);
 
     countdownDays.value = Math.floor(remainingMs / (1000 * 60 * 60 * 24));
     remainingMs = remainingMs % (1000 * 60 * 60 * 24);
@@ -39,6 +40,10 @@ function timerRecalc() {
     countdownSeconds.value = Math.floor(remainingMs / 1000);
 
     approxCountDownMonths.value = Math.ceil(countdownDays / 30);
+
+    if (remainingMs <= 0) {
+        releaseButtonShow = true;
+    }
 }
 
 timerRecalc();
@@ -48,7 +53,6 @@ onMounted(() => {
     console.log(ticker);
 })
 
-
 </script>
 
 <template>
@@ -56,9 +60,14 @@ onMounted(() => {
         <h1>Timer for {{ route.params.shortURL }}</h1>
         <p>{{ showRelease }}</p>
         <p>Total remaining MS:{{ timer }}</p>
-        <p v-if="countdownDays < 30">{{ countdownDays }}:{{ countdownHours }}:{{ countdownMinutes }}:{{ countdownSeconds
+        <p v-if="countdownDays < 30 && !releaseButtonShow">{{ countdownDays }}:{{ countdownHours }}:{{ countdownMinutes
+            }}:{{ countdownSeconds
             }}</p>
-        <p v-else="countdownDays > 30">Approximately {{ approxCountDownMonths }} months left</p>
+        <p v-else-if="countdownDays > 30 && !releaseButtonShow">Approximately {{ approxCountDownMonths }} months left
+        </p>
+
+        <a class="release-button" v-if="releaseButtonShow" href="">Open</a>
+
     </main>
 </template>
 
@@ -67,5 +76,13 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.release-button {
+    text-align: center;
+    margin: 0;
+    padding: 0.5rem;
+    border: solid black 0.3rem;
+    border-radius: 0.3rem;
 }
 </style>

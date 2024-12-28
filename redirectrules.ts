@@ -7,7 +7,7 @@ const redirects = [
     {
         destinationURL: 'https://alexchernyshev.com/',
         shortURL: 'alex',
-        releaseDate: new Date('December 30, 2024 12:00:00')
+        releaseDate: new Date('December 28, 2024 17:08:00')
     },
     // {
     //     destinationURL: 'https://www.google.com/',
