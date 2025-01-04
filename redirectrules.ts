@@ -1,13 +1,13 @@
 const redirects = [
     {
-        unknownUrl: 'https://www.wikipedia.org/'
+        // unknownUrl: 'https://www.wikipedia.org/'
         // Add another "rule" that if a "default path" is included to redirect to specified
         //ex: unknownUrl: 'https://www.wikipedia.org/',
     },
     {
         destinationURL: 'https://alexchernyshev.com/',
         shortURL: 'alex',
-        releaseDate: new Date('December 28, 2024 17:08:00')
+        releaseDate: new Date('January 22, 2025 17:08:00')
     },
     // {
     //     destinationURL: 'https://www.google.com/',

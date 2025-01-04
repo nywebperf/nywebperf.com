@@ -57,14 +57,19 @@ onMounted(() => {
 
 <template>
     <main>
-        <h1>Timer for {{ route.params.shortURL }}</h1>
-        <p>{{ showRelease }}</p>
-        <p>Total remaining MS:{{ timer }}</p>
-        <p v-if="countdownDays < 30 && !releaseButtonShow">{{ countdownDays }}:{{ countdownHours }}:{{ countdownMinutes
+        <h1>Timer for</h1>
+        <h2>{{ route.params.shortURL }}</h2>
+        <section class="release-date">
+            <h3>Release Date:</h3>
+            <p>{{ showRelease }}</p>
+            <p v-if="countdownDays < 30 && !releaseButtonShow">{{ countdownDays }}:{{ countdownHours }}:{{
+                countdownMinutes
             }}:{{ countdownSeconds
-            }}</p>
-        <p v-else-if="countdownDays > 30 && !releaseButtonShow">Approximately {{ approxCountDownMonths }} months left
-        </p>
+                }}</p>
+            <p v-else-if="countdownDays > 30 && !releaseButtonShow">Approximately {{ approxCountDownMonths }} months
+                left
+            </p>
+        </section>
 
         <a class="release-button" v-if="releaseButtonShow" href="">Open</a>
 
@@ -72,17 +77,41 @@ onMounted(() => {
 </template>
 
 <style>
+html {
+    background-color: hsl(168, 88%, 7%);
+}
+
 main {
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center;
+}
+
+main * {
+    margin: 0;
+    padding: 0.5rem;
+}
+
+h1 {
+    font-size: 1.5rem;
+}
+
+h2 {
+    font-size: 3rem;
+}
+
+.release-date {
+    margin: 1rem 0 0 0;
 }
 
 .release-button {
     text-align: center;
     margin: 0;
     padding: 0.5rem;
-    border: solid black 0.3rem;
+    border: solid white 0.3rem;
     border-radius: 0.3rem;
 }
 </style>
