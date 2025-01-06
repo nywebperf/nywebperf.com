@@ -22,6 +22,9 @@ To add more redirects, add another object to the ```redirects``` array structure
 
 To add a release date to the redirect, add an optional ```releaseDate``` key (as seen in the example). Add a date in the format seen in the example.
 This will prevent the redirect you specified from happening until the date you entered has been reached.
+
+It is recommended to specify the timezone you would like used when entering a release date. Without entering a timezone, the timer would use the timezone of the server. UTC is a good timezone if unsure of what to use.
+
 Before the release date, any visitors will instead see a page with the release date listed and with a timer showing the remaining time until the release date.
 
 ## Nuxt Minimal Starter
