@@ -57,7 +57,7 @@ We highlight where you can find the button in the image below.
 
 ![sync_fork_example](docs/sync_fork_example.JPG)
 
-You can also read more about syncing forks in the github docs [here][https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/syncing-a-fork]
+You can also read more about syncing forks in the github docs here: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/syncing-a-fork
 
 ## Nuxt Minimal Starter
 
