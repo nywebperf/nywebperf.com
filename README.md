@@ -27,6 +27,38 @@ It is recommended to specify the timezone you would like used when entering a re
 
 Before the release date, any visitors will instead see a page with the release date listed and with a timer showing the remaining time until the release date.
 
+### Including "Unknown URL" handling
+
+``` 
+{
+    unknownUrl: 'https://www.wikipedia.org/'
+}
+```
+
+If you would like to include a case for entered paths that do not match any of your defined rules, you can add an object to the rules structured as in the example, and enter the URL you would like to redirect unknown paths to.
+
+### "Default path" handling
+
+```
+{
+    destinationURL: 'https://www.google.com/',
+    shortURL: '',
+    releaseDate: new Date('December 3, 2024 12:00:00')
+},
+```
+If you would like to add a "default path", you can add an object to the rules that has an empty string as its ```shortURL``` property.
+This will act like a "home page", as any paths without one of your short URLs will redirect here.
+
+### Updating your forks
+
+If you have forked the repository for your personal use of the URL shortener, don't forget to check your fork page. Github has included a useful feature that lets you know if a fork has been updated, and let's you sync the source update with your fork with just one button click.
+
+We highlight where you can find the button in the image below.
+
+![sync_fork_example](docs/sync_fork_example.JPG)
+
+You can also read more about syncing forks in the github docs [here][https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/syncing-a-fork]
+
 ## Nuxt Minimal Starter
 
 Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
