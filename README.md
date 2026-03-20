@@ -1,3 +1,10 @@
+# NYWebPerf.com URL Shortener and analytics functionality
+
+## Objectives and functions
+
+The aim of this project is to extend the functionality of the original URL Shortener project to permit multiple links for one "rule", and to allow us to track the number of users using particular links for the purposes of discerning which platform users are arriving from. We can use these metrics to inform our community building, and to improve our maintenance of the commnity and events.
+
+
 # Using URL Shortener
 
 To use URL Shortener for your URLs, fork this repository.
@@ -58,79 +65,3 @@ We highlight where you can find the button in the image below.
 ![sync_fork_example](docs/sync_fork_example.JPG)
 
 You can also read more about syncing forks in the github docs here: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/syncing-a-fork
-
-## Nuxt Minimal Starter
-
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
-
-## Setup
-
-Make sure to install dependencies:
-
-```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
