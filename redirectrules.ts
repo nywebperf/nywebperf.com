@@ -1,28 +1,15 @@
 const redirects = [
     {
-        // unknownUrl: 'https://www.wikipedia.org/'
-        // Add another "rule" that if a "default path" is included to redirect to specified
-        //ex: unknownUrl: 'https://www.wikipedia.org/',
+        unknownUrl: 'https://www.nywebperformance.com/'
     },
     {
-        destinationURL: 'https://alexchernyshev.com/',
-        shortURL: 'alex',
-        releaseDate: new Date('January 22, 2025 17:08:00')
-    },
-    // {
-    //     destinationURL: 'https://www.google.com/',
-    //     shortURL: '',
-    //     releaseDate: new Date('December 3, 2024 12:00:00')
-    // },
-    {
-        destinationURL: 'https://www.sergeychernyshev.com/',
-        shortURL: 'sergey',
-        releaseDate: new Date('July 16, 2024 12:00:00')
+        destinationURL: 'https://www.meetup.com/web-performance-ny/',
+        shortURL: 'meetup',
     },
     {
-        destinationURL: 'https://www.nikolaschernyshev.com/',
-        shortURL: 'Nik',
-    },
+        destinationURL: 'https://docs.google.com/forms/d/e/1FAIpQLSfHyWHSWntTLEu_6pq500PhrrAjyyyVZsH92_eFK-SLMUJD5Q/viewform',
+        shortURL: 'speak',
+    }
 ];
 
 export default redirects;
