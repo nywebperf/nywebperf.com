@@ -9,4 +9,8 @@
   },
   "routes": [{ "pattern": "nywebperf.com", "custom_domain": true }],
   "workers_dev": true,
+  "preview_urls": true,
+  "observability": {
+    "enabled": true,
+  },
 }
