@@ -1,6 +1,10 @@
 {
+  "name": "nywebperf-com",
+  "main": "./.output/server/index.mjs",
   "compatibility_date": "2026-04-19",
+  "compatibility_flags": ["nodejs_compat"],
   "assets": {
     "directory": "./.output/public",
-  },
+    "binding": "ASSETS"
+  }
 }
