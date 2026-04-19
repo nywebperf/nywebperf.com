@@ -25,6 +25,36 @@ To create a basic rule, you just need to use one object and fill in the ```desti
 
 To add more redirects, add another object to the ```redirects``` array structured the same way as the example.
 
+### Route patterns
+
+Short URLs can include named parameters that get captured from the path and substituted into the destination URL.
+
+```typescript
+{
+    destinationURL: 'https://www.meetup.com/web-performance-ny/events/$eventId',
+    shortURL: 'e/:eventId/:source?/:medium?/:campaign?',
+}
+```
+
+Syntax:
+
+- `:name` — required path segment captured as `name`.
+- `:name?` — optional segment. The leading slash is also optional, so a pattern like `e/:eventId/:source?` matches both `/e/123` and `/e/123/twitter`.
+- Literal segments (like `e` above) must match exactly.
+
+Captured values are substituted into `destinationURL` using `$name`. Optional params that did not match are substituted with an empty string.
+
+For matching needs that go beyond the simple syntax, pass a `RegExp` as `shortURL` and use named groups:
+
+```typescript
+{
+    shortURL: /^\/event\/(?<eventId>\d+)$/,
+    destinationURL: 'https://www.meetup.com/web-performance-ny/events/$eventId',
+}
+```
+
+Rules are evaluated in array order — place exact-match short URLs before pattern rules that could also match them.
+
 ### Adding a release date
 
 To add a release date to the redirect, add an optional ```releaseDate``` key (as seen in the example). Add a date in the format seen in the example.
