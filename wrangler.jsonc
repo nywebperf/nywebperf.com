@@ -8,4 +8,5 @@
     "binding": "ASSETS",
   },
   "routes": [{ "pattern": "nywebperf.com", "custom_domain": true }],
+  "workers_dev": true,
 }
