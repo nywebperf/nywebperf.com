@@ -5,6 +5,7 @@
   "compatibility_flags": ["nodejs_compat"],
   "assets": {
     "directory": "./.output/public",
-    "binding": "ASSETS"
-  }
+    "binding": "ASSETS",
+  },
+  "routes": [{ "pattern": "nywebperf.com", "custom_domain": true }],
 }
