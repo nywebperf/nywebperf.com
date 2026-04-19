@@ -53,6 +53,10 @@ const redirects = [
     {
         destinationURL: 'https://www.nywebperformance.org/',
         shortURL: 'organizers',
+    },
+    {
+        destinationURL: 'https://www.meetup.com/web-performance-ny/events/$eventId',
+        shortURL: 'e/:eventId/:source?/:medium?/:campaign?',
     }
 ];
 
