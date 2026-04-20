@@ -86,6 +86,29 @@ If you would like to include a case for entered paths that do not match any of y
 If you would like to add a "default path", you can add an object to the rules that has an empty string as its ```shortURL``` property.
 This will act like a "home page", as any paths without one of your short URLs will redirect here.
 
+## Redirect logging
+
+Every matched redirect is logged to a Cloudflare Durable Object (`RedirectLog`) backed by its embedded SQLite store. Logging runs after `sendRedirect` via `waitUntil`, so it never delays the 301.
+
+### Schema
+
+- `redirects(id, timestamp, path, short_url, destination_url)` — one row per redirect. `short_url` is the rule's pattern as written (or the `RegExp.toString()` for regex rules); `destination_url` is fully substituted.
+- `variables(id, key, value)` with `UNIQUE(key, value)` — deduplicated captured route parameters.
+- `redirect_variables(redirect_id, variable_id)` — many-to-many join enabling grouping and filtering by any variable.
+
+The schema is created idempotently in the DO constructor, so a fresh deploy needs no manual migration.
+
+### Deploying
+
+The Worker is bundled from [worker.mjs](worker.mjs), which re-exports the Nitro handler and the `RedirectLog` class. `wrangler.jsonc` declares the DO binding `REDIRECT_LOG` and a `v1` migration that creates the SQLite-backed class on first deploy.
+
+```
+npm run build
+npx wrangler deploy
+```
+
+Local development now runs under the Workers runtime via `npm run dev`, which builds the Nitro output and then starts `wrangler dev`. The `REDIRECT_LOG` DO is backed by an in-memory SQLite store locally, so logging works end-to-end without touching production. Re-run `npm run dev` after editing source to pick up changes (or run `nuxt build` in another terminal while `wrangler dev` stays up — it watches the bundled output).
+
 ### Updating your forks
 
 If you have forked the repository for your personal use of the URL shortener, don't forget to check your fork page. Github has included a useful feature that lets you know if a fork has been updated, and let's you sync the source update with your fork with just one button click.

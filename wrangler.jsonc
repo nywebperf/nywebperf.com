@@ -1,16 +1,27 @@
 {
   "name": "nywebperf-com",
-  "main": "./.output/server/index.mjs",
+  "main": "./worker.mjs",
   "compatibility_date": "2026-04-19",
   "compatibility_flags": ["nodejs_compat"],
   "assets": {
     "directory": "./.output/public",
     "binding": "ASSETS",
   },
-  "routes": [{ "pattern": "nywebperf.com", "custom_domain": true }],
+  "routes": [
+    { "pattern": "nywebperf.com", "custom_domain": true },
+    { "pattern": "www.nywebperf.com", "custom_domain": true },
+  ],
   "workers_dev": true,
   "preview_urls": true,
   "observability": {
     "enabled": true,
   },
+  "durable_objects": {
+    "bindings": [
+      { "name": "REDIRECT_LOG", "class_name": "RedirectLog" },
+    ],
+  },
+  "migrations": [
+    { "tag": "v1", "new_sqlite_classes": ["RedirectLog"] },
+  ],
 }

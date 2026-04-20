@@ -1,10 +1,15 @@
 import redirects from '@/redirectrules';
+import type { RedirectLog, RedirectLogEntry } from '@/server/durable-objects/redirect-log';
 
 type RedirectRule = {
     destinationURL?: string;
     shortURL?: string | RegExp;
     releaseDate?: Date;
     unknownUrl?: string;
+};
+
+type CloudflareEnv = {
+    REDIRECT_LOG?: DurableObjectNamespace<RedirectLog>;
 };
 
 export default defineEventHandler(async (event) => {
@@ -39,7 +44,19 @@ export default defineEventHandler(async (event) => {
         if (!redirect.destinationURL) continue;
 
         const destination = substituteDestination(redirect.destinationURL, vars);
-        return sendRedirect(event, destination, 301);
+        const entry: RedirectLogEntry = {
+            timestamp: now.toISOString(),
+            path,
+            shortUrl: redirect.shortURL instanceof RegExp
+                ? redirect.shortURL.toString()
+                : redirect.shortURL,
+            destinationUrl: destination,
+            vars,
+        };
+
+        const response = sendRedirect(event, destination, 301);
+        scheduleLog(event, entry);
+        return response;
     }
 
     const unknowns = (redirects as RedirectRule[]).filter(rule => rule.unknownUrl);
@@ -51,3 +68,16 @@ export default defineEventHandler(async (event) => {
     return sendRedirect(event, unknowns[0].unknownUrl!, 302);
 
 });
+
+function scheduleLog(event: any, entry: RedirectLogEntry): void {
+    const cloudflare = event.context?.cloudflare;
+    const ctx = cloudflare?.context as ExecutionContext | undefined;
+    const binding = (cloudflare?.env as CloudflareEnv | undefined)?.REDIRECT_LOG;
+    if (!binding || !ctx) return;
+    const stub = binding.get(binding.idFromName('singleton'));
+    ctx.waitUntil(
+        stub.log(entry).catch((err: unknown) => {
+            console.error('redirect log failed', err);
+        }),
+    );
+}
