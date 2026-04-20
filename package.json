@@ -6,6 +6,9 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt build && wrangler dev",
+    "clean": "rm -rf node_modules .output .wrangler .nuxt",
+    "clean:packages": "rm -rf node_modules",
+    "clean:data": "rm -rf .output .wrangler .nuxt",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
