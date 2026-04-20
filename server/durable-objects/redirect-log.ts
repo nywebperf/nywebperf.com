@@ -13,6 +13,10 @@ export type RedirectLogEntry = {
 const SCHEMA_VERSION = 2;
 
 const CURRENT_SCHEMA = `
+    CREATE TABLE IF NOT EXISTS _schema_meta (
+        key TEXT PRIMARY KEY,
+        value TEXT NOT NULL
+    );
     CREATE TABLE IF NOT EXISTS routes (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         path TEXT NOT NULL,
@@ -43,16 +47,39 @@ const CURRENT_SCHEMA = `
     CREATE INDEX IF NOT EXISTS idx_redirect_variables_variable ON redirect_variables(variable_id);
 `;
 
-function readUserVersion(sql: SqlStorage): number {
-    const row = sql.exec('PRAGMA user_version').one() as Record<string, unknown>;
-    const raw = row.user_version ?? Object.values(row)[0];
-    return Number(raw) || 0;
+function tableExists(sql: SqlStorage, name: string): boolean {
+    const rows = [...sql.exec<{ name: string }>(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name = ?",
+        name,
+    )];
+    return rows.length > 0;
+}
+
+function readSchemaVersion(sql: SqlStorage): number {
+    if (!tableExists(sql, '_schema_meta')) return 0;
+    const [row] = [...sql.exec<{ value: string }>(
+        "SELECT value FROM _schema_meta WHERE key = 'version'",
+    )];
+    if (!row) return 0;
+    return Number(row.value) || 0;
+}
+
+function writeSchemaVersion(sql: SqlStorage, version: number): void {
+    sql.exec(
+        `INSERT INTO _schema_meta (key, value) VALUES ('version', ?)
+         ON CONFLICT(key) DO UPDATE SET value = excluded.value`,
+        String(version),
+    );
 }
 
 function hasLegacyRedirectsTable(sql: SqlStorage): boolean {
-    const columns = [...sql.exec<{ name: string }>("PRAGMA table_info('redirects')")]
-        .map((r) => r.name);
-    return columns.includes('path');
+    const [row] = [...sql.exec<{ sql: string | null }>(
+        "SELECT sql FROM sqlite_master WHERE type='table' AND name='redirects'",
+    )];
+    if (!row) return false;
+    const createSql = row.sql ?? '';
+    // v1 defined redirects(... path TEXT NOT NULL ...). v2 has no `path` column.
+    return /\bpath\b\s+TEXT\b/i.test(createSql);
 }
 
 // v1 stored path / short_url / destination_url on every `redirects` row.
@@ -65,18 +92,18 @@ function migrateV1ToV2(sql: SqlStorage): void {
             short_url TEXT NOT NULL,
             destination_url TEXT NOT NULL,
             UNIQUE(path, short_url, destination_url)
-        );
+        )
     `);
     sql.exec(`
         INSERT INTO routes (path, short_url, destination_url)
-        SELECT DISTINCT path, short_url, destination_url FROM redirects;
+        SELECT DISTINCT path, short_url, destination_url FROM redirects
     `);
     sql.exec(`
         CREATE TABLE redirects_new (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             timestamp TEXT NOT NULL,
             route_id INTEGER NOT NULL REFERENCES routes(id)
-        );
+        )
     `);
     sql.exec(`
         INSERT INTO redirects_new (id, timestamp, route_id)
@@ -85,17 +112,23 @@ function migrateV1ToV2(sql: SqlStorage): void {
         JOIN routes rt
           ON r.path = rt.path
          AND r.short_url = rt.short_url
-         AND r.destination_url = rt.destination_url;
+         AND r.destination_url = rt.destination_url
     `);
-    sql.exec('DROP TABLE redirects;');
-    sql.exec('ALTER TABLE redirects_new RENAME TO redirects;');
-    sql.exec('CREATE INDEX idx_routes_short_url ON routes(short_url);');
-    sql.exec('CREATE INDEX idx_redirects_timestamp ON redirects(timestamp);');
-    sql.exec('CREATE INDEX idx_redirects_route ON redirects(route_id);');
+    sql.exec('DROP TABLE redirects');
+    sql.exec('ALTER TABLE redirects_new RENAME TO redirects');
+    sql.exec('CREATE INDEX idx_routes_short_url ON routes(short_url)');
+    sql.exec('CREATE INDEX idx_redirects_timestamp ON redirects(timestamp)');
+    sql.exec('CREATE INDEX idx_redirects_route ON redirects(route_id)');
+    sql.exec(`
+        CREATE TABLE IF NOT EXISTS _schema_meta (
+            key TEXT PRIMARY KEY,
+            value TEXT NOT NULL
+        )
+    `);
 }
 
-function initSchema(sql: SqlStorage): void {
-    if (readUserVersion(sql) >= SCHEMA_VERSION) return;
+export function initSchema(sql: SqlStorage): void {
+    if (readSchemaVersion(sql) >= SCHEMA_VERSION) return;
 
     if (hasLegacyRedirectsTable(sql)) {
         migrateV1ToV2(sql);
@@ -103,10 +136,10 @@ function initSchema(sql: SqlStorage): void {
         sql.exec(CURRENT_SCHEMA);
     }
 
-    sql.exec(`PRAGMA user_version = ${SCHEMA_VERSION}`);
+    writeSchemaVersion(sql, SCHEMA_VERSION);
 }
 
-export class RedirectLog extends DurableObject {
+export class RedirectLog extends DurableObject<unknown> {
     sql: SqlStorage;
 
     constructor(ctx: DurableObjectState, env: unknown) {

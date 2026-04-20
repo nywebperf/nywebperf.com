@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
 
     appendResponseHeader(event, "Cache-Control", "no-store");
 
-    const path = event.path.split('?')[0];
+    const path = event.path.split('?')[0] ?? event.path;
     const now = new Date();
 
     for (const redirect of redirects as RedirectRule[]) {
@@ -65,7 +65,7 @@ export default defineEventHandler(async (event) => {
         return;
     }
 
-    return sendRedirect(event, unknowns[0].unknownUrl!, 302);
+    return sendRedirect(event, unknowns[0]!.unknownUrl!, 302);
 
 });
 

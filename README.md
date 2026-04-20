@@ -97,7 +97,7 @@ Every matched redirect is logged to a Cloudflare Durable Object (`RedirectLog`) 
 - `variables(id, key, value)` with `UNIQUE(key, value)` — deduplicated captured route parameters.
 - `redirect_variables(redirect_id, variable_id)` — many-to-many join enabling grouping and filtering by any variable.
 
-The schema version is tracked via `PRAGMA user_version` in the DO's SQLite store. The DO constructor creates the current schema on a fresh deploy and migrates older schemas forward in place (e.g. the pre-normalization v1 `redirects` table is rewritten into `routes` + `redirects(route_id)`). No manual migration step is required.
+The schema version is tracked in a `_schema_meta` table in the DO's SQLite store (DO SQLite disallows `PRAGMA user_version`). The DO constructor creates the current schema on a fresh deploy and migrates older schemas forward in place (e.g. the pre-normalization v1 `redirects` table is rewritten into `routes` + `redirects(route_id)`). No manual migration step is required.
 
 ### Deploying
 
