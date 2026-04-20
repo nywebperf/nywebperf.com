@@ -92,11 +92,12 @@ Every matched redirect is logged to a Cloudflare Durable Object (`RedirectLog`) 
 
 ### Schema
 
-- `redirects(id, timestamp, path, short_url, destination_url)` — one row per redirect. `short_url` is the rule's pattern as written (or the `RegExp.toString()` for regex rules); `destination_url` is fully substituted.
+- `routes(id, path, short_url, destination_url)` with `UNIQUE(path, short_url, destination_url)` — deduplicated route signatures so the same path/pattern/destination triple is stored once regardless of how many times it is hit. `short_url` is the rule's pattern as written (or `RegExp.toString()` for regex rules); `destination_url` is fully substituted.
+- `redirects(id, timestamp, route_id)` — one row per redirect hit, referencing the route.
 - `variables(id, key, value)` with `UNIQUE(key, value)` — deduplicated captured route parameters.
 - `redirect_variables(redirect_id, variable_id)` — many-to-many join enabling grouping and filtering by any variable.
 
-The schema is created idempotently in the DO constructor, so a fresh deploy needs no manual migration.
+The schema version is tracked via `PRAGMA user_version` in the DO's SQLite store. The DO constructor creates the current schema on a fresh deploy and migrates older schemas forward in place (e.g. the pre-normalization v1 `redirects` table is rewritten into `routes` + `redirects(route_id)`). No manual migration step is required.
 
 ### Deploying
 
