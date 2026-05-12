@@ -11,6 +11,10 @@ const redirects = [
         shortURL: 'speak',
     },
     {
+        destinationURL: 'https://docs.google.com/forms/d/e/1FAIpQLSffrXfUvYvek2c0O1Qf0OVYaSwiLU93kwTB__Mu7lNlN_xUxA/viewform?hl=en_US&formkey=dEh0dk1XbUh4SEw2OWJ6YVEzV0ZSNGc6MA',
+        shortURL: 'speaker-info',
+    },
+    {
         destinationURL: 'https://www.linkedin.com/company/web-performance-ny/',
         shortURL: 'li',
     },
